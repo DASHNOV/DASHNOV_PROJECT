@@ -1,0 +1,5 @@
+CREATE TABLE Rapports (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    nom NVARCHAR(255) NOT NULL,
+    requete NVARCHAR(MAX) NOT NULL
+);
