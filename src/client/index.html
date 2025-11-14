@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DashNov5</title>
+
+    <!-- Bootstrap local CSS -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+
+    <!-- FontAwesome local CSS -->
+    <link rel="stylesheet" href="assets/css/fontawesome.min.css">
+
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <a href="#eventLogTable" id="onglet-fil-des-evenements" class="nav-link" style="display: none;" onclick="showTab('eventLogTable')">
+        <i class="icon fas fa-list"></i><span>Fil des événements</span>
+    </a>
+    <a href="#ongletCreationDetenteurs" id="onglet-gestion-des-detenteurs" class="nav-link" style="display: none;" onclick="showTab('ongletCreationDetenteurs')">
+        <i class="icon fas fa-user-plus"></i><span>Création Détenteurs</span>
+    </a>
+    <a href="#ongletGestionVisiteurs" id="onglet-gestion-des-visiteurs" class="nav-link" style="display: none;" onclick="showTab('ongletGestionVisiteurs')">
+        <i class="icon fas fa-qrcode"></i><span>Gestion Visiteurs</span>
+    </a>
+    <a href="#ongletGestionCodesPins" id="onglet-gestion-codes-pin" class="nav-link" style="display: none;" onclick="showTab('ongletGestionCodesPins')">
+        <i class="icon fas fa-shield"></i><span>Gestion Codes PIN</span>
+    </a>    
+    <a href="#ongletgenerateurderapport" id="onglet-generateur-de-rapport" class="nav-link" style="display: none;" onclick="showTab('ongletgenerateurderapport')">
+        <i class="icon fas fa-file"></i><span>Rapport</span>
+    </a>
+    <a href="#ongletGestionProfils" id="onglet-gestion-des-profils" class="nav-link" style="display: none;" onclick="showTab('ongletGestionProfils')">
+        <i class="icon fas fa-key"></i><span>Profils Web</span>
+    </a>
+    <a href="#ongletGestionUtilisateurs" id="onglet-gestion-des-utilisateurs" class="nav-link" style="display: none;" onclick="showTab('ongletGestionUtilisateurs')">
+        <i class="icon fas fa-users"></i><span>Utilisateur Web</span>
+    </a>
+    <a href="#ongletControleur" id="onglet-gestion-des-controleurs" class="nav-link" style="display: none;" onclick="showTab('ongletControleur')">
+        <i class="icon fas fa-cogs"></i><span>Gestion Contrôleurs</span>
+    </a>
+</div>
+
+    <!-- Main content area -->
+    <div class="main-content">
+        <nav class="navbar">
+            <a class="navbar-brand" href="#">
+                <img src="assets/logo/NOVADIS_LOGO_NOIR_HD_.jpg" alt="Logo">
+            </a>
+            <div class="d-flex align-items-center">
+                <label for="connexionStatusSwitch" class="me-2">Statut de connexion :</label>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="connexionStatusSwitch" disabled>
+                </div>
+                <button class="btn btn-logout ms-3" onclick="logout()">Déconnexion</button>
+            </div>
+        
+        </nav>
+        
+        <!-- Event log table -->
+        <div id="eventLogTable" class="content-section">
+            <h2>Fil de l'eau des événements</h2>
+            <div class="table-responsive-fil-de-leau">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Type d'événement</th>
+                            <th>Date et Heure</th>
+                            <th>Depuis</th>
+                            <th>Code badge / Détenteur de badge</th>
+                        </tr>
+                    </thead>
+                    <tbody id="eventLogBody"></tbody>
+                </table>
+            </div>
+        </div>
+        <div id="ongletGestionCodesPins" class="content-section" style="display: none;">
+            <label for="selectSociete">Sélectionnez une société :</label>
+            <select id="selectSociete" class="form-select" onchange="filtrerSocietes()">
+                <option value="">Toutes les sociétés</option>
+            </select>
+            <h2>Gestion des Codes PIN par Société</h2>
+            <form id="formSociete">
+                <label for="nomSociete">Nom de la Société :</label>
+                <input type="text" id="nomSociete" class="form-control" required>
+        
+                <label for="groupeAcces">Groupe d'accès :</label>
+                <select id="groupeAccesSociete" class="form-select" required>
+                    <option value="">Sélectionnez un groupe d'accès</option>
+                </select>
+                <label for="groupeAscenseur">Groupe d'Accès Ascenseur :</label>
+                <select id="groupeAscenseur" class="form-select">
+                    <option value="">-- Sélectionnez un groupe ASC --</option>
+                </select>
+        
+                <!-- Boutons d'action -->
+                <div class="mt-3">
+                    <button type="button" class="btn btn-primary" onclick="ajouterSociete()">Ajouter Société</button>
+                    <button type="button" class="btn btn-danger" onclick="supprimerSociete()">Supprimer Société</button>
+                </div>
+            </form>
+            <h2></h2>
+            <button class="btn btn-secondary" onclick="telechargerTableau()">Télécharger au format XLS</button>
+            <h3>Codes PIN Associés</h3>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Société</th>
+                        <th>Semaine</th>
+                        <th>Semaine (Dates)</th>
+                        <th>Année</th>
+                        <th>Code PIN</th>
+                    </tr>
+                </thead>
+                <tbody id="tableCodesPins"></tbody>
+            </table>
+        </div>
+        
+        <!-- Create Holder Section -->
+        <div id="ongletCreationDetenteurs" class="content-section" style="display: none;">
+            <h2>Création de Détenteurs</h2>
+            <form id="creationDetenteursForm">
+                <label for="numero">Numéro :</label>
+                <input type="text" class="form-control" id="numero" name="numero" required>
+                <label for="nom">Nom de Famille :</label>
+                <input type="text" class="form-control" id="nom" name="nom" required>
+                <label for="prenom">Prénom :</label>
+                <input type="text" class="form-control" id="prenom" name="prenom" required>
+                <label for="type">Type :</label>
+                <select id="type" class="form-select" name="type" required>
+                    <option value="0">Visiteur</option>
+                    <option value="1">Employé</option>
+                    <option value="2">Garde</option>
+                    <option value="3">Effacé</option>
+                </select>
+                <label for="badge">Badge :</label>
+                <input type="text" class="form-control" id="badge" name="badge" required>
+                <label for="technologie">Technologie :</label>
+                <select id="technologie" class="form-select" name="technologie" required>
+                    <option value="3">Badge</option>
+                    <option value="9">Plaque d'immatriculation</option>
+                </select>
+                <label for="groupeAcces">Groupe d'accès :</label>
+                <select id="groupeAccesDetenteur" class="form-select" name="groupeAcces" required></select>
+                <label for="societe">Société :</label>
+                <input type="text" class="form-control" id="societe" name="societe">
+                <label for="dateDebutCRDHLD">Date de début :</label>
+                <input type="datetime-local" class="form-control" id="dateDebutCRDHLD" name="dateDebutCRDHLD">
+                <label for="dateFinCRDHLD">Date de fin :</label>
+                <input type="datetime-local" class="form-control" id="dateFinCRDHLD" name="dateFinCRDHLD">
+                <label for="groupeAscenseurCRDHLD">Groupe Ascenseur :</label>
+                <select id="groupeAscenseurCRDHLD" class="form-select" name="groupeAscenseurCRDHLD">
+                    <option value="">Sélectionnez un groupe ascenseur</option>
+                </select>
+                <label for="codePin">Code PIN :</label>
+                <input type="text" class="form-control" id="codePin" name="codePin">
+                <label for="departement">Département :</label>
+                <input type="text" class="form-control" id="departement" name="departement">
+                <label for="valide">Validé :</label>
+                <input type="checkbox" class="form-check-label" id="valide" name="valide">
+                <div></div>
+                <button type="button" class="btn btn-primary mt-3" onclick="creerDetenteur()">Créer Détenteur</button>
+                <button type="button" class="btn btn-warning mt-3" onclick="modifierDetenteur()">Modifier Détenteur</button>
+                <button type="button" class="btn btn-danger mt-3" onclick="supprimerDetenteur()">Supprimer Détenteur</button>
+                <button type="button" class="btn btn-secondary mt-3" onclick="effacerFormulaire()">Effacer le Formulaire</button>
+                <div id="erreurNumeroMessage" class="erreur" style="display: none; margin-top: 10px;"></div>
+            </form>
+            <h3>Liste des Détenteurs</h3>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Type</th>
+                        <th>Badge</th>
+                        <th>Technologie</th>
+                        <th>Numéro</th>
+                        <th>Groupe d'accès</th>
+                        <th>Société</th>
+                        <th>Date Début</th>
+                        <th>Date Fin</th>
+                        <th>Groupe Ascenseur</th>
+                        <th>Code PIN</th>
+                        <th>Département</th>
+                        <th>Validé</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBodyDetenteurs"></tbody>
+            </table>
+        </div>
+
+        <!-- QR Code Section -->
+        <div id="ongletGestionVisiteurs" class="content-section" style="display: none;">
+            <h2>Gestion des Visiteurs avec QR Code</h2>
+            <form id="creationQRCodeVisiteurForm">
+                <div class="form-group">
+                    <label for="nomVisiteur">Nom de Famille :</label>
+                    <input type="text" class="form-control" id="nomVisiteur" name="nomVisiteur" required>
+                </div>
+                <div class="form-group">
+                    <label for="prenomVisiteur">Prénom :</label>
+                    <input type="text" class="form-control" id="prenomVisiteur" name="prenomVisiteur" required>
+                </div>
+                <div class="form-group">
+                    <label for="societeVisiteur">Société :</label>
+                    <input type="text" class="form-control" id="societeVisiteur" name="societeVisiteur" required>
+                </div>
+                <div class="form-group">
+                    <label for="dateDebut">Date de début :</label>
+                    <input type="datetime-local" class="form-control" id="dateDebut" name="dateDebut" required>
+                </div>
+                <div class="form-group">
+                    <label for="dateFin">Date de fin :</label>
+                    <input type="datetime-local" class="form-control" id="dateFin" name="dateFin" required>
+                </div>
+                <button type="button" class="btn btn-primary mt-3" onclick="creerDetenteurQRCodeVisiteur()">Créer Visiteur</button>
+            </form>
+
+
+            <!-- Table de recherche et affichage des visiteurs -->
+            <div id="rechercheVisiteurs">
+                <h3>Recherche et Sélection des Visiteurs</h3>
+                <button class="btn btn-secondary mb-3" onclick="rechercherVisiteurs()">Rechercher</button>
+                <div id="resultatsRechercheVisiteurs" style="display: none;">
+                    <table class="table table-hover" id="tableVisiteurs">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Prénom</th>
+                                <th>Numéro</th>
+                                <th>QR Code</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyTableVisiteurs"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="ongletgenerateurderapport" class="content-section" style="display: none;">
+            <h2>Générateur de Rapport</h2>
+            <div>
+                <label for="rapportSelect">Choisir un rapport :</label>
+                <select id="rapportSelect">
+                    <option value="" disabled selected>-- Sélectionnez un rapport --</option>
+                </select>
+                <button class="btn btn-primary" onclick="telechargerRapport('PDF')">Télécharger en PDF</button>
+                <button class="btn btn-secondary" onclick="telechargerRapport('XLS')">Télécharger en XLS</button>
+            </div>
+        
+            <!-- Section d'ajout de rapports -->
+            <h4>Ajouter un nouveau rapport</h4>
+            <form id="ajoutRapportForm">
+                <div>
+                    <label for="nomRapport">Nom du rapport :</label>
+                    <input type="text" id="nomRapport" placeholder="Nom descriptif du rapport" required>
+                </div>
+                <div>
+                    <label for="requeteRapport">Requête SQL :</label>
+                    <textarea id="requeteRapport" rows="5" placeholder="Requête SQL pour générer ce rapport" required></textarea>
+                </div>
+                <button class="btn btn-success" type="button" onclick="ajouterRapport()">Ajouter le rapport</button>
+            </form>
+        </div>
+        
+        <div id="ongletGestionUtilisateurs" class="content-section" style="display: none;">
+            <h2>Gestion des Utilisateurs</h2>
+        
+            <div class="row">
+                <!-- Liste des utilisateurs -->
+                <div class="col-mt-4">
+                    <h3>Liste des Utilisateurs</h3>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Nom d'utilisateur</th>
+                                <th>Profil associé</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableUtilisateursBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="col-md-6">
+                    <h3>Créer un Utilisateur</h3>
+                    <form id="creationUtilisateurForm">
+                        <div class="form-group">
+                            <label for="createUsername">Nom d'utilisateur :</label>
+                            <input type="text" class="form-control" id="createUsername" name="username" required>
+                        </div>
+                
+                        <div class="form-group">
+                            <label for="createPassword">Mot de passe :</label>
+                            <input type="password" class="form-control" id="createPassword" name="password" required>
+                        </div>
+                
+                        <div class="form-group">
+                            <label for="createProfile">Profil associé :</label>
+                            <select id="createProfile" class="form-select" name="profileId" required></select>
+                        </div>
+                
+                        <button type="button" class="btn btn-primary mt-3" onclick="creerUtilisateur()">Créer Utilisateur</button>
+                    </form>
+                </div>
+        
+                <!-- Formulaire de modification de l'utilisateur -->
+                <div class="col-md-6">
+                    <h3>Modifier un Utilisateur</h3>
+                    <form id="modificationUtilisateurForm">
+                        <input type="hidden" id="modifyUtilisateurId" name="utilisateurId">
+                
+                        <div class="form-group">
+                            <label for="modifyUsername">Nom d'utilisateur :</label>
+                            <input type="text" class="form-control" id="modifyUsername" name="username" readonly>
+                        </div>
+                
+                        <div class="form-group">
+                            <label for="modifyPassword">Nouveau mot de passe :</label>
+                            <input type="password" class="form-control" id="modifyPassword" name="password" placeholder="Laisser vide si non changé">
+                        </div>
+                
+                        <div class="form-group">
+                            <label for="modifyProfile">Profil associé :</label>
+                            <select id="modifyProfile" class="form-select" name="profile" required></select>
+                        </div>
+        
+                        <button type="button" class="btn btn-primary mt-3" onclick="modifierUtilisateur()">Modifier Utilisateur</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="ongletGestionProfils" class="content-section" style="display: none;">
+            <h2>Gestion des Profils</h2>
+        
+            <div class="row">
+                <!-- Liste des profils -->
+                <div class="col-mt-4">
+                    <h3>Liste des Profils</h3>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nom du Profil</th>
+                                    <th>Onglets Accessibles</th>
+                                    <th>Temps de déconnexion automatique</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableProfilsBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+        
+<!-- Formulaire de création de profil -->
+<div class="col-md-6">
+    <h3>Créer un Profil</h3>
+    <form id="creationProfilForm">
+        <div class="form-group">
+            <label for="nomProfil">Nom du Profil :</label>
+            <input type="text" class="form-control" id="nomProfil" name="nomProfil" required>
+        </div>
+
+        <div class="form-group">
+            <label for="ongletsAccessibles">Onglets Accessibles :</label>
+            <div id="ongletsAccessiblesCheckboxes">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="eventLogCheck" value="Fil des événements">
+                    <label class="form-check-label" for="eventLogCheck">Fil des événements</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="gestionDetenteursCheck" value="Gestion des détenteurs">
+                    <label class="form-check-label" for="gestionDetenteursCheck">Gestion des détenteurs</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="gestionVisiteursCheck" value="Gestion des visiteurs">
+                    <label class="form-check-label" for="gestionVisiteursCheck">Gestion des visiteurs</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="gestionCodesPinsCheck" value="Gestion Codes PIN">
+                    <label class="form-check-label" for="gestionCodesPinsCheck">Gestion Codes PIN</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="Générateur de Rapport" id="ongletGenerateurDeRapport">
+                    <label class="form-check-label" for="ongletGenerateurDeRapport">Générateur de Rapport</label>
+                </div>                                
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="gestionUtilisateursCheck" value="Gestion des utilisateurs">
+                    <label class="form-check-label" for="gestionUtilisateursCheck">Gestion des utilisateurs</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="gestionProfilsCheck" value="Gestion des profils">
+                    <label class="form-check-label" for="gestionProfilsCheck">Gestion des profils</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="gestionControleurCheck" value="Gestion des Contrôleurs">
+                    <label class="form-check-label" for="gestionControleurCheck">Gestion des Contrôleurs</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="autoDeconnexionTemps">Temps de déconnexion automatique (en minutes) :</label>
+            <input type="number" class="form-control" id="autoDeconnexionTemps" name="autoDeconnexionTemps" placeholder="Laisser vide pour illimité">            
+        </div>
+        <button type="button" class="btn btn-primary mt-3" onclick="creerProfil()">Créer Profil</button>
+    </form>
+</div>
+        
+                <!-- Formulaire de modification de profil -->
+                <div class="col-md-6">
+                    <h3>Modifier un Profil</h3>
+                    <form id="modificationProfilForm">
+                        <input type="hidden" id="profilId" name="profilId"> <!-- ID du profil caché pour identifier quel profil modifier -->
+        
+                        <div class="form-group">
+                            <label for="nomProfilMod">Nom du Profil :</label>
+                            <input type="text" class="form-control" id="nomProfilMod" name="nomProfilMod" required>
+                        </div>
+        
+                        <div class="form-group">
+                            <label for="ongletsAccessiblesMod">Onglets Accessibles :</label>
+                            <div id="ongletsAccessiblesCheckboxesMod">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="eventLogCheckMod" value="Fil des événements">
+                                    <label class="form-check-label" for="eventLogCheckMod">Fil des événements</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="gestionDetenteursCheckMod" value="Gestion des détenteurs">
+                                    <label class="form-check-label" for="gestionDetenteursCheckMod">Gestion des détenteurs</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="gestionVisiteursCheckMod" value="Gestion des visiteurs">
+                                    <label class="form-check-label" for="gestionVisiteursCheckMod">Gestion des visiteurs</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="gestionCodesPinsCheckMod" value="Gestion Codes PIN">
+                                    <label class="form-check-label" for="gestionCodesPinsCheckMod">Gestion Codes PIN</label>
+                                </div>     
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="Générateur de Rapport" id="ongletGenerateurDeRapport">
+                                    <label class="form-check-label" for="ongletGenerateurDeRapport">Générateur de Rapport</label>
+                                </div>                             
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="gestionUtilisateursCheckMod" value="Gestion des utilisateurs">
+                                    <label class="form-check-label" for="gestionUtilisateursCheckMod">Gestion des utilisateurs</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="gestionProfilsCheck" value="Gestion des profils">
+                                    <label class="form-check-label" for="gestionProfilsCheck">Gestion des profils</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="gestionControleurCheck" value="Gestion des Contrôleurs">
+                                    <label class="form-check-label" for="gestionControleurCheck">Gestion des Contrôleurs</label>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div class="form-group">
+                            <label for="autoDeconnexionTempsMod">Temps de déconnexion automatique (en minutes) :</label>
+                            <input type="number" class="form-control" id="autoDeconnexionTempsMod" name="autoDeconnexionTempsMod" placeholder="Laisser vide pour illimité">
+                        </div>
+        
+                        <button type="button" class="btn btn-primary mt-3" onclick="modifierProfil()">Modifier Profil</button>
+                    </form>
+                </div>
+            </div>
+        </div>    
+        
+        <div id="ongletControleur" class="content-section" style="display: none;">
+            <h2>Gestion des Contrôleurs</h2>
+            <div class="mb-3">
+                <button class="btn btn-primary" id="groupRecreateButton" onclick="executerActionGroupee('Initialisation')">Initialisation</button>
+                <button class="btn btn-success" id="groupStartButton" onclick="executerActionGroupee('Démarrer le Polling')">Démarrer le Polling</button>
+                <button class="btn btn-danger" id="groupStopButton" onclick="executerActionGroupee('Stop le Polling')">Arrêter le Polling</button>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Sélection</th>
+                            <th>Nom</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableControleursBody"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        
+        
+        
+    <footer>
+        DashNov 2025 - Novadis
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Connexion</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <label for="loginUsername">Nom d'utilisateur :</label>
+                        <input type="text" id="loginUsername" class="form-control" required>
+                        <label for="loginPassword">Mot de passe :</label>
+                        <input type="password" id="loginPassword" class="form-control" required>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="login()">Se connecter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS CDN -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/Controller.js"></script>
+    <script src="assets/js/InitPage.js"></script>
+    <script src="assets/js/PinSoc.js"></script>
+    <script src="assets/js/AccesGroup.js"></script>
+    <script src="assets/js/Report.js"></script> <!-- Charger Report.js avant InitPage.js -->
+    <script src="assets/js/CardHolder.js"></script>
+    <script src="assets/js/filDeLeau.js"></script>
+    <script src="assets/js/Profils_Users.js"></script>
+    <script src="assets/js/Visitor.js"></script>
+    <script src="assets/js/Login.js"></script>
+</body>
+</html>

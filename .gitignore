@@ -1,0 +1,51 @@
+﻿# Dependencies
+node_modules/
+package-lock.json
+
+# Build output
+dist/
+*.log
+
+# Environment
+.env
+SQL.env
+!.env.example
+!SQL.env.example
+*.env.local
+
+# Temporary
+temp/
+logs/
+Backup_*/
+*_Installer_Build/
+BACKUP_BEFORE_RESTRUCTURE_*/
+
+# Database
+database/backups/*.bak
+*.mdf
+*.ldf
+
+# Installation
+DASHNOV_Setup_*.zip
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Windows
+.BIN/
+
+# Apache logs
+Apache24/logs/*.log
+
+# Test coverage
+coverage/
+.nyc_output/

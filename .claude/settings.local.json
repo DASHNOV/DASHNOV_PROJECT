@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-Content \"C:\\DashNov\\Logs\\service-error.log\" -ErrorAction SilentlyContinue)",
+      "Bash(Get-Content \"C:\\DashNov\\Logs\\service.log\" -ErrorAction SilentlyContinue)",
+      "Bash(Get-Service DashNovService -ErrorAction SilentlyContinue)",
+      "Bash(Select-Object Name, Status, StartType)",
+      "Bash(test:*)",
+      "Bash(powershell -ExecutionPolicy Bypass -Command \"& ''.\\build-installer.ps1'' -Version ''1.1''\")",
+      "Bash(powershell -ExecutionPolicy Bypass -Command \"& ''.\\build-installer.ps1'' -Version ''1.2''\")",
+      "Bash(unzip:*)",
+      "Bash(Get-ChildItem \"C:\\DashNov\\Server\\Server\" -ErrorAction SilentlyContinue)",
+      "Bash(Select-Object Mode, LastWriteTime, Length, Name)",
+      "Bash(Test-Path \"C:\\DASHNOV\\Server\\node_modules\\moment\")",
+      "Bash(Get-Content \"C:\\DASHNOV\\Server\\package.json\")",
+      "Bash(powershell:*)",
+      "Bash(node -e:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push -u origin R-offlineInstaller)",
+      "Bash(git reset:*)",
+      "Bash(tree:*)",
+      "Bash(node index.js:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
