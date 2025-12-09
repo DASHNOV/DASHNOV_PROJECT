@@ -30,7 +30,7 @@ if (result.error) {
 console.log('âœ“ Configuration chargÃ©e depuis:', envFilePath);
 
 const app = express();
-app.use(express.static(path.join(__dirname, '..', '..', 'dist', 'client')));
+app.use(express.static(path.join(__dirname, '..', 'client')));
 
 const HOST = process.env.HOST || '0.0.0.0';
 const PORT = parseInt(process.env.PORT, 10) || 8085;
@@ -93,12 +93,12 @@ console.log(`  â†’ Utilisateur: ${config.user}\n`);
 
 // --- POOL DE CONNEXIONS GLOBAL ---
 const poolPromise = new sql.ConnectionPool(config)
-   .connect()
-   .then(pool => {
+    .connect()
+    .then(pool => {
         console.log('Pool de connexions SQL global crÃ©Ã© et connectÃ©.');
         return pool;
     })
-   .catch(err => console.error('Erreur de connexion au pool de la base de donnÃ©es :', err));
+    .catch(err => console.error('Erreur de connexion au pool de la base de donnÃ©es :', err));
 
 
 
@@ -722,8 +722,6 @@ app.post('/detenteurs/supprimer', authenticateToken, async (req, res) => {
     }
 });
 
-app.use(express.static(path.join(__dirname, '..', '..', 'dist', 'client')));
-
 app.get('/filDeLEau', authenticateToken, async (req, res) => {
     const trnTypes = [24, 25, 32, 31, 61, 63, 1, 3];
     const trnTypesCondition = trnTypes.map(type => `Trn_Type = ${type}`).join(' OR ');
@@ -911,8 +909,8 @@ app.post('/creerSocieteAvecCodePin', authenticateToken, async (req, res) => {
 
         try {
             const liftResult = await transaction.request()
-               .input('authlift', sql.NVarChar, groupeAscenseur)
-               .query('SELECT Name FROM dbo.Lift WHERE Name = @authlift');
+                .input('authlift', sql.NVarChar, groupeAscenseur)
+                .query('SELECT Name FROM dbo.Lift WHERE Name = @authlift');
 
             if (liftResult.recordset.length === 0) {
                 await transaction.rollback();
@@ -924,19 +922,19 @@ app.post('/creerSocieteAvecCodePin', authenticateToken, async (req, res) => {
                 do {
                     codePin = genererCodePin();
                     const result = await transaction.request()
-                       .input('semaine', sql.Int, semaine)
-                       .input('annee', sql.Int, anneeActuelle)
-                       .input('codePin', sql.VarChar, codePin)
-                       .query('SELECT COUNT(*) AS count FROM CodesPIN WHERE Semaine = @semaine AND Annee = @annee AND Pin = @codePin');
+                        .input('semaine', sql.Int, semaine)
+                        .input('annee', sql.Int, anneeActuelle)
+                        .input('codePin', sql.VarChar, codePin)
+                        .query('SELECT COUNT(*) AS count FROM CodesPIN WHERE Semaine = @semaine AND Annee = @annee AND Pin = @codePin');
                     collision = result.recordset[0].count > 0;
                 } while (collision);
 
                 await transaction.request()
-                   .input('nomSociete', sql.VarChar, nomSociete)
-                   .input('semaine', sql.Int, semaine)
-                   .input('annee', sql.Int, anneeActuelle)
-                   .input('codePin', sql.VarChar, codePin)
-                   .query(`INSERT INTO CodesPIN (Societe, Semaine, Annee, Pin) VALUES (@nomSociete, @semaine, @annee, @codePin)`);
+                    .input('nomSociete', sql.VarChar, nomSociete)
+                    .input('semaine', sql.Int, semaine)
+                    .input('annee', sql.Int, anneeActuelle)
+                    .input('codePin', sql.VarChar, codePin)
+                    .query(`INSERT INTO CodesPIN (Societe, Semaine, Annee, Pin) VALUES (@nomSociete, @semaine, @annee, @codePin)`);
 
                 if (semaine === semaineActuelle) {
                     codePinSemaineActuelle = codePin;
@@ -949,23 +947,23 @@ app.post('/creerSocieteAvecCodePin', authenticateToken, async (req, res) => {
             }
 
             const xmlString = xmlbuilder.create('query', { headless: true })
-               .ele('Number', `${nomSociete}_PIN`).up()
-               .ele('Last_Name', `${nomSociete}_PIN`).up()
-               .ele('First_Name', `${nomSociete}_PIN`).up()
-               .ele('Company', nomSociete).up()
-               .ele('Type', '1').up()
-               .ele('Badge', `AA_${codePinSemaineActuelle}`).up()
-               .ele('Technology', '3').up()
-               .ele('Access_Group', groupeAcces).up()
-               .ele('PIN_code', codePinSemaineActuelle).up()
-               .ele('Lift_Program', groupeAscenseur).up()
-               .ele('Status', '0').up()
-               .ele('Result', '0').up()
-               .end({ pretty: true });
+                .ele('Number', `${nomSociete}_PIN`).up()
+                .ele('Last_Name', `${nomSociete}_PIN`).up()
+                .ele('First_Name', `${nomSociete}_PIN`).up()
+                .ele('Company', nomSociete).up()
+                .ele('Type', '1').up()
+                .ele('Badge', `AA_${codePinSemaineActuelle}`).up()
+                .ele('Technology', '3').up()
+                .ele('Access_Group', groupeAcces).up()
+                .ele('PIN_code', codePinSemaineActuelle).up()
+                .ele('Lift_Program', groupeAscenseur).up()
+                .ele('Status', '0').up()
+                .ele('Result', '0').up()
+                .end({ pretty: true });
 
             await transaction.request()
-               .input('xmlString', sql.NVarChar, xmlString)
-               .query(`INSERT INTO QueueMSGAPI (DateCreated, ServerName, Cmd, Msg, Status, Result) VALUES (GETDATE(), 'DASHNOV', 'ImportOneCardHolderXML', @xmlString, 0, 0);`);
+                .input('xmlString', sql.NVarChar, xmlString)
+                .query(`INSERT INTO QueueMSGAPI (DateCreated, ServerName, Cmd, Msg, Status, Result) VALUES (GETDATE(), 'DASHNOV', 'ImportOneCardHolderXML', @xmlString, 0, 0);`);
 
             await transaction.commit();
             res.status(200).json({
@@ -1405,40 +1403,40 @@ app.get('/rapports/:id/telecharger', authenticateToken, async (req, res) => {
 // ============================================
 // DÃ©marrage du serveur
 // ============================================
-const server = 
-// ============================================
-// ROUTE RACINE (Test de fonctionnement)
-// ============================================
-// ===== PAGE D'ACCUEIL =====
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+const server =
+    // ============================================
+    // ROUTE RACINE (Test de fonctionnement)
+    // ============================================
+    // ===== PAGE D'ACCUEIL =====
+    app.get('/', (req, res) => {
+        res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    });
 
 app.get('/api', (req, res) => {
-  res.json({
-    status: 'running',
-    message: '🚀 DashNov Server est opérationnel',
-    version: '1.0.0',
-    timestamp: new Date().toISOString(),
-    database: process.env.DB_DATABASE,
-    server: process.env.DB_SERVER,
-    environment: process.env.NODE_ENV,
-    timezone: process.env.TZ,
-    endpoints: {
-      health: '/health',
-      api: '/api/*',
-      auth: '/api/auth/*'
-    }
-  });
+    res.json({
+        status: 'running',
+        message: '🚀 DashNov Server est opérationnel',
+        version: '1.0.0',
+        timestamp: new Date().toISOString(),
+        database: process.env.DB_DATABASE,
+        server: process.env.DB_SERVER,
+        environment: process.env.NODE_ENV,
+        timezone: process.env.TZ,
+        endpoints: {
+            health: '/health',
+            api: '/api/*',
+            auth: '/api/auth/*'
+        }
+    });
 });
 
 // Route de santé (Health Check)
 app.get('/health', (req, res) => {
-  res.status(200).json({ 
-    status: 'OK',
-    uptime: process.uptime(),
-    timestamp: new Date().toISOString()
-  });
+    res.status(200).json({
+        status: 'OK',
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString()
+    });
 });
 
 app.listen(PORT, HOST, () => {

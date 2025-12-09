@@ -1,52 +1,85 @@
+/* ========================================
+   VARIABLES CSS POUR LE RESPONSIVE DESIGN
+   ======================================== */
+:root {
+    /* Breakpoints */
+    --breakpoint-mobile: 768px;
+    --breakpoint-tablet: 1024px;
+
+    /* Sidebar dimensions */
+    --sidebar-width-collapsed: 80px;
+    --sidebar-width-expanded: 250px;
+
+    /* Transitions */
+    --transition-speed: 0.3s;
+    --transition-easing: ease;
+
+    /* Colors */
+    --color-sidebar-bg: #1f2937;
+    --color-sidebar-hover: #00aaff;
+    --color-overlay: rgba(0, 0, 0, 0.5);
+    --color-white: #ffffff;
+
+    /* Z-index layers */
+    --z-sidebar: 1000;
+    --z-overlay: 999;
+    --z-burger: 1001;
+}
+
+/* ========================================
+   FONT FACES
+   ======================================== */
 @font-face {
     font-family: 'Poppins';
     src: url('/assets/fonts/poppins/Poppins-Regular.woff2') format('woff2'),
-         url('assets/fonts/poppins/Poppins-Bold.woff2') format('woff2');
+        url('assets/fonts/poppins/Poppins-Bold.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
 }
+
 @font-face {
-font-family: 'Font Awesome 5 Free';
-font-style: normal;
-font-weight: 400;
-src: url('assets/fonts/fontawesome/fa-regular-400.woff2') format('woff2'),
+    font-family: 'Font Awesome 5 Free';
+    font-style: normal;
+    font-weight: 400;
+    src: url('assets/fonts/fontawesome/fa-regular-400.woff2') format('woff2'),
 }
 
 @font-face {
-font-family: 'Font Awesome 5 Free';
-font-style: normal;
-font-weight: 900;
-src: url('../fonts/fontawesome/fa-solid-900.woff2') format('woff2'),
+    font-family: 'Font Awesome 5 Free';
+    font-style: normal;
+    font-weight: 900;
+    src: url('../fonts/fontawesome/fa-solid-900.woff2') format('woff2'),
 }
 
 @font-face {
-font-family: 'Font Awesome 5 Brands';
-font-style: normal;
-font-weight: 400;
-src: url('assets/fonts/fontawesome/fa-brands-400.woff2') format('woff2'),
+    font-family: 'Font Awesome 5 Brands';
+    font-style: normal;
+    font-weight: 400;
+    src: url('assets/fonts/fontawesome/fa-brands-400.woff2') format('woff2'),
 }
 
 .fas {
-font-family: 'Font Awesome 5 Free';
-font-weight: 900;
-font-style: normal;
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    font-style: normal;
 }
 
 .far {
-font-family: 'Font Awesome 5 Free';
-font-weight: 400;
-font-style: normal;
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 400;
+    font-style: normal;
 }
 
 .fab {
-font-family: 'Font Awesome 5 Brands';
-font-style: normal;
+    font-family: 'Font Awesome 5 Brands';
+    font-style: normal;
 }
 
 
 body {
     font-family: 'Poppins', sans-serif;
 }
+
 body {
     font-family: 'Poppins', sans-serif;
     background-color: #f0f2f5;
@@ -91,7 +124,8 @@ body {
 }
 
 /* Styles pour l'icône et texte des onglets sélectionnés */
-.sidebar a.active, .sidebar a.active .icon {
+.sidebar a.active,
+.sidebar a.active .icon {
     background-color: #00aaff;
     color: #ffffff;
 }
@@ -147,16 +181,21 @@ body {
 }
 
 /* Form field styles for better visibility */
-.form-control, .form-select {
-    border: 2px solid #ccc; /* Bordure plus visible */
+.form-control,
+.form-select {
+    border: 2px solid #ccc;
+    /* Bordure plus visible */
     border-radius: 4px;
     padding: 10px;
     transition: border-color 0.3s ease;
 }
 
-.form-control:focus, .form-select:focus {
-    border-color: #00aaff; /* Couleur de surbrillance lors du focus */
-    box-shadow: 0 0 5px rgba(0, 170, 255, 0.5); /* Effet de surbrillance */
+.form-control:focus,
+.form-select:focus {
+    border-color: #00aaff;
+    /* Couleur de surbrillance lors du focus */
+    box-shadow: 0 0 5px rgba(0, 170, 255, 0.5);
+    /* Effet de surbrillance */
     outline: none;
 }
 
@@ -169,7 +208,7 @@ body {
     padding-bottom: 80px;
 }
 
-.sidebar:hover ~ .main-content {
+.sidebar:hover~.main-content {
     margin-left: 250px;
 }
 
@@ -192,36 +231,48 @@ footer {
     background-color: #1f2937;
     color: white;
     width: 100%;
-    position: fixed; /* Positionner le footer de manière fixe */
-    bottom: 0; /* Toujours en bas */
-    left: 0; /* Pour bien coller à gauche */
-    z-index: 1000; /* Pour le garder au-dessus du contenu si nécessaire */
-    height: 20px; /* Hauteur du footer */
+    position: fixed;
+    /* Positionner le footer de manière fixe */
+    bottom: 0;
+    /* Toujours en bas */
+    left: 0;
+    /* Pour bien coller à gauche */
+    z-index: 1000;
+    /* Pour le garder au-dessus du contenu si nécessaire */
+    height: 20px;
+    /* Hauteur du footer */
 }
 
-.sidebar:hover ~ footer {
+.sidebar:hover~footer {
     margin-left: 250px;
 }
 
 /* Ajustement du margin lorsque la sidebar est élargie */
-.sidebar:hover ~ .main-content {
+.sidebar:hover~.main-content {
     margin-left: 250px;
 }
 
 /* Conteneur pour rendre le tableau scrollable */
 .table-responsive-fil-de-leau {
-    max-height: 710px; /* Hauteur maximum du tableau avant défilement */
-    overflow-y: auto; /* Barre de défilement verticale */
-    overflow-x: hidden; /* Pas de barre de défilement horizontale */
+    max-height: 710px;
+    /* Hauteur maximum du tableau avant défilement */
+    overflow-y: auto;
+    /* Barre de défilement verticale */
+    overflow-x: hidden;
+    /* Pas de barre de défilement horizontale */
     position: relative;
 }
 
 /* Fixer les en-têtes de colonnes lors du défilement */
 .table-responsive-fil-de-leau thead {
-    position: sticky; /* Rendre les en-têtes fixes */
-    top: 0; /* Les garder collés en haut */
-    z-index: 1; /* S'assurer que les en-têtes restent au-dessus du contenu */
-    background-color: white; /* Fond blanc pour les en-têtes */
+    position: sticky;
+    /* Rendre les en-têtes fixes */
+    top: 0;
+    /* Les garder collés en haut */
+    z-index: 1;
+    /* S'assurer que les en-têtes restent au-dessus du contenu */
+    background-color: white;
+    /* Fond blanc pour les en-têtes */
 }
 
 /* Ajustement de la taille des colonnes */
@@ -229,11 +280,362 @@ footer {
 .table-responsive-fil-de-leau td {
     padding: 10px;
     text-align: left;
-    white-space: nowrap; /* Empêcher le texte de se casser sur plusieurs lignes */
+    white-space: nowrap;
+    /* Empêcher le texte de se casser sur plusieurs lignes */
 }
 
 /* Gestion du débordement du texte si nécessaire */
 .table-responsive-fil-de-leau td {
     overflow: hidden;
-    text-overflow: ellipsis; /* Points de suspension si le texte est trop long */
+    text-overflow: ellipsis;
+    /* Points de suspension si le texte est trop long */
+}
+
+/* ========================================
+   MENU BURGER
+   ======================================== */
+.burger-menu {
+    display: none;
+    /* Caché par défaut sur desktop */
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 25px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: var(--z-burger);
+    position: relative;
+    transition: transform var(--transition-speed) var(--transition-easing);
+}
+
+.burger-menu:hover {
+    transform: scale(1.1);
+}
+
+.burger-menu:focus {
+    outline: 2px solid var(--color-sidebar-hover);
+    outline-offset: 4px;
+}
+
+.burger-menu span {
+    width: 30px;
+    height: 3px;
+    background-color: #333;
+    border-radius: 2px;
+    transition: all var(--transition-speed) var(--transition-easing);
+    transform-origin: center;
+}
+
+/* Animation du burger en X quand le menu est ouvert 
+body.sidebar-open .burger-menu span:nth-child(1) {
+    transform: translateY(11px) rotate(45deg);
+}
+
+body.sidebar-open .burger-menu span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+body.sidebar-open .burger-menu span:nth-child(3) {
+    transform: translateY(-11px) rotate(-45deg);
+}
+*/
+/* ========================================
+   OVERLAY POUR MOBILE
+   ======================================== */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-overlay);
+    z-index: var(--z-overlay);
+    opacity: 0;
+    transition: opacity var(--transition-speed) var(--transition-easing);
+}
+
+body.sidebar-open .sidebar-overlay {
+    display: block;
+    opacity: 1;
+}
+
+/* ========================================
+   IMAGES ET MÉDIAS RESPONSIFS
+   ======================================== */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.navbar-brand img {
+    max-width: 200px;
+    height: auto;
+    transition: max-width var(--transition-speed);
+}
+
+/* ========================================
+   MEDIA QUERIES - MOBILE FIRST
+   ======================================== */
+
+/* Tablettes et mobiles (< 1024px) */
+@media screen and (max-width: 1023px) {
+
+    /* Afficher le menu burger */
+    .burger-menu {
+        display: flex;
+    }
+
+    /* Sidebar cachée par défaut sur mobile/tablette */
+    .sidebar {
+        transform: translateX(-100%);
+        width: var(--sidebar-width-expanded);
+        transition: transform var(--transition-speed) var(--transition-easing);
+    }
+
+    /* Sidebar ouverte */
+    body.sidebar-open .sidebar {
+        transform: translateX(0);
+    }
+
+    /* Désactiver le hover expand sur mobile */
+    .sidebar:hover {
+        width: var(--sidebar-width-expanded);
+    }
+
+    .sidebar a span {
+        opacity: 1;
+    }
+
+    .sidebar:hover .icon {
+        transform: none;
+    }
+
+    /* Main content prend toute la largeur */
+    .main-content {
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .sidebar:hover~.main-content {
+        margin-left: 0;
+    }
+
+    /* Footer ajustement */
+    footer {
+        margin-left: 0;
+        font-size: 0.85rem;
+        padding: 15px;
+    }
+
+    .sidebar:hover~footer {
+        margin-left: 0;
+    }
+
+    /* Navbar responsive */
+    .navbar {
+        padding: 10px 15px;
+        flex-wrap: wrap;
+    }
+
+    .navbar-brand img {
+        max-width: 150px;
+    }
+
+    /* Ajustement des boutons dans la navbar */
+    .navbar .d-flex {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .btn-logout {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+
+    /* Tables responsive */
+    .table-responsive-fil-de-leau {
+        max-height: 500px;
+    }
+
+    table {
+        font-size: 0.9rem;
+    }
+
+    th,
+    td {
+        padding: 8px !important;
+    }
+
+    /* Content sections */
+    .content-section {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .content-section h2 {
+        font-size: 1.5rem;
+    }
+
+    .content-section h3 {
+        font-size: 1.25rem;
+    }
+
+    /* Formulaires responsive */
+    .form-control,
+    .form-select {
+        font-size: 1rem;
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    /* Colonnes en pleine largeur sur mobile */
+    .col-md-6 {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
+
+/* Mobile uniquement (< 768px) */
+@media screen and (max-width: 767px) {
+
+    /* Réduction supplémentaire de la typographie */
+    body {
+        font-size: 14px;
+    }
+
+    .navbar-brand img {
+        max-width: 120px;
+    }
+
+    .content-section h2 {
+        font-size: 1.3rem;
+    }
+
+    .content-section h3 {
+        font-size: 1.1rem;
+    }
+
+    /* Labels et inputs en pleine largeur */
+    label {
+        font-size: 0.9rem;
+        margin-top: 10px;
+    }
+
+    /* Tables avec scroll horizontal si nécessaire */
+    .table-responsive,
+    .table-responsive-fil-de-leau {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        font-size: 0.85rem;
+        min-width: 600px;
+    }
+
+    /* Navbar en colonne sur très petit écran */
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .navbar .d-flex {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    /* Modal responsive */
+    .modal-dialog {
+        margin: 10px;
+    }
+
+    /* Padding réduit pour maximiser l'espace */
+    .main-content {
+        padding: 10px;
+        padding-bottom: 60px;
+    }
+
+    .content-section {
+        padding: 10px;
+    }
+
+    /* Footer plus compact */
+    footer {
+        font-size: 0.75rem;
+        padding: 10px;
+        height: auto;
+    }
+}
+
+/* Desktop (>= 1024px) */
+@media screen and (min-width: 1024px) {
+
+    /* Menu burger caché sur desktop */
+    .burger-menu {
+        display: none;
+    }
+
+    /* Sidebar visible par défaut */
+    .sidebar {
+        transform: translateX(0);
+    }
+
+    /* Overlay jamais affiché sur desktop */
+    .sidebar-overlay {
+        display: none !important;
+    }
+
+    /* Comportement normal de la sidebar */
+    .main-content {
+        margin-left: var(--sidebar-width-collapsed);
+    }
+
+    .sidebar:hover~.main-content {
+        margin-left: var(--sidebar-width-expanded);
+    }
+}
+
+/* Très grands écrans (>= 1440px) */
+@media screen and (min-width: 1440px) {
+    .main-content {
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: calc(var(--sidebar-width-collapsed) + 20px);
+    }
+
+    .navbar-brand img {
+        max-width: 250px;
+    }
+}
+
+/* ========================================
+   ACCESSIBILITÉ
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus visible pour navigation clavier */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 2px solid var(--color-sidebar-hover);
+    outline-offset: 2px;
 }
